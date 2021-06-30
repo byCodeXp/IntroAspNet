@@ -1,0 +1,57 @@
+﻿@model IntroAspNet.Models.ViewModels.ProductVM
+
+@{
+    ViewData["Title"] = "Add product";
+    string title = "Add product";
+    if(Model.Product.Id != 0)
+    {
+        title = "Edir product";
+    }
+}
+
+<h1>@title</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @if (Model.Product.Id != 0)
+            {
+                <input asp-for="Product.Id" hidden />
+            }
+            <div class="form-group">
+                <label asp-for="Product.Name" class="control-label"></label>
+                <input asp-for="Product.Name" class="form-control" />
+                <span asp-validation-for="Product.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Product.Preview" for="formFile" class="form-label">Default file input example</label>
+                <input type="file" name="files" id="upload" multiple class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Product.PreviewText" class="control-label"></label>
+                <input asp-for="Product.PreviewText" class="form-control" />
+                <span asp-validation-for="Product.PreviewText" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Product.Description" class="control-label"></label>
+                <input asp-for="Product.Description" class="form-control" />
+                <span asp-validation-for="Product.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Product.Price" class="control-label"></label>
+                <input asp-for="Product.Price" class="form-control" />
+                <span asp-validation-for="Product.Price" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-3">
+                <input type="submit" value="Save" class="btn btn-primary" />
+                <a asp-action="Index">Back to List</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
