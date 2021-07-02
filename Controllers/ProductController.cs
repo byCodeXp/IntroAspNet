@@ -4,42 +4,59 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using IntroAspNet.Data;
 using IntroAspNet.Models;
-using System.Collections.Generic;
+using Microsoft.AspNetCore.Hosting;
 using IntroAspNet.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Hosting;
 using System;
 using System.IO;
+using System.Collections.Generic;
 
 namespace IntroAspNet.Controllers
 {
     public class ProductController : Controller
     {
-        private readonly ApplicationDataContext _db;
+        private readonly ApplicationDbContext _context;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ProductController(ApplicationDataContext context, IWebHostEnvironment webHostEnvironment)
+        public ProductController(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
         {
-            _db = context;
+            _context = context;
             _webHostEnvironment = webHostEnvironment;
         }
 
-        // Get
-
+        // GET: Product
         public IActionResult Index()
         {
-            IEnumerable<Product> productList = _db.Product.Include(u => u.Category);
+            IEnumerable<Product> productList = _context.Product.Include(u => u.Category);
             return View(productList);
         }
 
-        // Upsert
+        // GET: Product/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var product = await _context.Product
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            return View(product);
+        }
+
+        // GET: Product/Upsert
 
         public IActionResult Upsert(int? id)
         {
             ProductVM productVM = new ProductVM()
             {
                 Product = new Product(),
-                CategorySelectList = _db.Category.Select(u => new SelectListItem
+                CategorySelectList = _context.Category.Select(u => new SelectListItem
                 {
                     Text = u.Name,
                     Value = u.Id.ToString()
@@ -52,8 +69,7 @@ namespace IntroAspNet.Controllers
             }
             else
             {
-                productVM.Product = _db.Product.Find(id);
-
+                productVM.Product = _context.Product.Find(id);
                 if (productVM.Product == null)
                 {
                     return NotFound();
@@ -76,6 +92,7 @@ namespace IntroAspNet.Controllers
                 string fileName = Guid.NewGuid().ToString();
                 string extentions = Path.GetExtension(files[0].FileName);
 
+
                 if (productVM.Product.Id == 0)
                 {
                     using (var fileStream = new FileStream(Path.Combine(upload, fileName + extentions), FileMode.Create))
@@ -84,11 +101,11 @@ namespace IntroAspNet.Controllers
                     }
 
                     productVM.Product.Preview = fileName + extentions;
-                    _db.Product.Add(productVM.Product);
+                    _context.Product.Add(productVM.Product);
                 }
                 else
                 {
-                    var formObject = _db.Product.AsNoTracking().FirstOrDefault(u => u.Id == productVM.Product.Id);
+                    var formObject = _context.Product.AsNoTracking().FirstOrDefault(u => u.Id == productVM.Product.Id);
                     if (files.Count > 0)
                     {
                         var oldFile = Path.Combine(upload, formObject.Preview);
@@ -107,12 +124,12 @@ namespace IntroAspNet.Controllers
                     {
                         productVM.Product.Preview = formObject.Preview;
                     }
-                    _db.Product.Update(productVM.Product);
+                    _context.Product.Update(productVM.Product);
                 }
-                _db.SaveChanges();
+                _context.SaveChanges();
                 return RedirectToAction("Index");
             }
-            productVM.CategorySelectList = _db.Category.Select(i => new SelectListItem
+            productVM.CategorySelectList = _context.Category.Select(i => new SelectListItem
             {
                 Text = i.Name,
                 Value = i.Id.ToString()
@@ -120,8 +137,7 @@ namespace IntroAspNet.Controllers
             return View(productVM);
         }
 
-        // Delete
-
+        // GET: Product/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -129,7 +145,7 @@ namespace IntroAspNet.Controllers
                 return NotFound();
             }
 
-            var product = await _db.Product
+            var product = await _context.Product
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (product == null)
             {
@@ -139,31 +155,20 @@ namespace IntroAspNet.Controllers
             return View(product);
         }
 
+        // POST: Product/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public IActionResult DeletePost(int? id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var obj = _db.Product.Find(id);
-            if (obj == null)
-            {
-                return NotFound();
-            }
-
-            string upload = _webHostEnvironment.WebRootPath + ENV.ImagePath;
-            var oldFile = Path.Combine(upload, obj.Preview);
-
-            if (System.IO.File.Exists(oldFile))
-            {
-                System.IO.File.Delete(oldFile);
-            }
-            _db.Product.Remove(obj);
-            _db.SaveChanges();
-            return RedirectToAction("Index");
+            var product = await _context.Product.FindAsync(id);
+            _context.Product.Remove(product);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         private bool ProductExists(int id)
         {
-            return _db.Product.Any(e => e.Id == id);
+            return _context.Product.Any(e => e.Id == id);
         }
     }
 }

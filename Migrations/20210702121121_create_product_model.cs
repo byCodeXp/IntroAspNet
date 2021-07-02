@@ -2,7 +2,7 @@
 
 namespace IntroAspNet.Migrations
 {
-    public partial class CreateProduct : Migration
+    public partial class create_product_model : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

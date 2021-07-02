@@ -2,7 +2,7 @@
 
 namespace IntroAspNet.Migrations
 {
-    public partial class CreateCategory : Migration
+    public partial class create_category_model : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

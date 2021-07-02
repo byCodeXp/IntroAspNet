@@ -1,27 +1,46 @@
-﻿using IntroAspNet.Data;
-using IntroAspNet.Models;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
+using IntroAspNet.Data;
+using IntroAspNet.Models;
 
 namespace IntroAspNet.Controllers
 {
     public class CategoryController : Controller
     {
-        private readonly ApplicationDataContext _db;
-        public CategoryController(ApplicationDataContext db)
+        private readonly ApplicationDbContext _context;
+
+        public CategoryController(ApplicationDbContext context)
         {
-            _db = db;
+            _context = context;
         }
 
-        public IActionResult Index()
+        // GET: Category
+        public async Task<IActionResult> Index()
         {
-            IEnumerable<Category> categories = _db.Category;
-            return View(categories);
+            return View(await _context.Category.ToListAsync());
         }
 
-        // Upsert
+        // GET: Category/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var category = await _context.Category
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (category == null)
+            {
+                return NotFound();
+            }
+
+            return View(category);
+        }
+
+        // GET: Category/Upsert
 
         public IActionResult Upsert(int? id)
         {
@@ -33,16 +52,17 @@ namespace IntroAspNet.Controllers
             }
             else
             {
-                category = _db.Category.Find(id);
+                category = _context.Category.Find(id);
 
                 if (category == null)
                 {
                     return NotFound();
                 }
-
                 return View(category);
             }
         }
+
+        // POST: Category/Upsert
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -52,41 +72,51 @@ namespace IntroAspNet.Controllers
             {
                 if (category.Id == 0)
                 {
-                    _db.Category.Add(category);
+                    _context.Category.Add(category);
                 }
                 else
                 {
-                    var formObject = _db.Category.AsNoTracking().FirstOrDefault(u => u.Id == category.Id);
-                    _db.Category.Update(category);
+                    var formObject = _context.Category.AsNoTracking().FirstOrDefault(u => u.Id == category.Id);
+                    _context.Category.Update(category);
                 }
-                _db.SaveChanges();
+                _context.SaveChanges();
                 return RedirectToAction("Index");
             }
             return View(category);
         }
 
-        // Delete
-
-        public IActionResult Delete(int? id)
+        // GET: Category/Delete/5
+        public async Task<IActionResult> Delete(int? id)
         {
-            return View();
-        }
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-        [Route("[controller]/DeleteCategory/"), HttpDelete("{id:int}"), ValidateAntiForgeryToken]
-        public IActionResult DeleteCategory(int? id)
-        {
-            var category = _db.Category.Find(id);
-
+            var category = await _context.Category
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (category == null)
             {
                 return NotFound();
             }
-            else
-            {
-                _db.Category.Remove(category);
-                _db.SaveChanges();
-                return RedirectToAction("Index");
-            }
+
+            return View(category);
+        }
+
+        // POST: Category/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var category = await _context.Category.FindAsync(id);
+            _context.Category.Remove(category);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool CategoryExists(int id)
+        {
+            return _context.Category.Any(e => e.Id == id);
         }
     }
 }

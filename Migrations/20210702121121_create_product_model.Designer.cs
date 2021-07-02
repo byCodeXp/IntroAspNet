@@ -9,9 +9,9 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace IntroAspNet.Migrations
 {
-    [DbContext(typeof(ApplicationDataContext))]
-    [Migration("20210630122858_CreateProduct")]
-    partial class CreateProduct
+    [DbContext(typeof(ApplicationDbContext))]
+    [Migration("20210702121121_create_product_model")]
+    partial class create_product_model
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

@@ -1,0 +1,19 @@
+﻿@model IntroAspNet.Models.Product
+
+<div class="col">
+    <div class="card" style="width: 18rem;">
+        <img src="@ENV.ImagePath@Model.Preview" class="card-img-top" alt="@Model.Name">
+        <div class="card-body">
+            <h5 class="card-title">@Model.Name</h5>
+            <p class="card-text">@Model.PreviewText</p>
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">Price: @Model.Price</li>
+            <li class="list-group-item">Category: @Model.Category.Name</li>
+        </ul>
+        <div class="card-body">
+            <a href="#" class="card-link">Card link</a>
+            <a href="#" class="card-link">Another link</a>
+        </div>
+    </div>
+</div>

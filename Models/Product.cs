@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace IntroAspNet.Models
 {
@@ -12,7 +13,10 @@ namespace IntroAspNet.Models
         public string Description { get; set; }
         [Required, Range(0, double.MaxValue)]
         public double Price { get; set; }
-        
+
+        [Display(Name = "Category Type")]
+        public int CategoryId { get; set; }
+        [ForeignKey("CategoryId")]
         public virtual Category Category { get; set; }
     }
 }

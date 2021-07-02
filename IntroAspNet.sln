@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31410.223
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntroAspNet", "IntroAspNet.csproj", "{8AF37D12-2B0E-4148-99AD-915AFA3EB042}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntroAspNet", "IntroAspNet.csproj", "{FC7F49DD-EC40-4E82-9AD0-AA2608C0A3D5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{8AF37D12-2B0E-4148-99AD-915AFA3EB042}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8AF37D12-2B0E-4148-99AD-915AFA3EB042}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8AF37D12-2B0E-4148-99AD-915AFA3EB042}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8AF37D12-2B0E-4148-99AD-915AFA3EB042}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC7F49DD-EC40-4E82-9AD0-AA2608C0A3D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC7F49DD-EC40-4E82-9AD0-AA2608C0A3D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC7F49DD-EC40-4E82-9AD0-AA2608C0A3D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC7F49DD-EC40-4E82-9AD0-AA2608C0A3D5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {90464264-6687-476A-8431-57BEE45C405F}
+		SolutionGuid = {C22D301D-4B39-481F-A6FA-86116501766E}
 	EndGlobalSection
 EndGlobal
