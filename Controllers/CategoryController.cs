@@ -1,18 +1,22 @@
-﻿using System.Linq;
+﻿using System;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using IntroAspNet.Data;
 using IntroAspNet.Models;
+using Microsoft.AspNetCore.Hosting;
 
 namespace IntroAspNet.Controllers
 {
     public class CategoryController : Controller
     {
         private readonly ApplicationDbContext _context;
-
-        public CategoryController(ApplicationDbContext context)
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        public CategoryController(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
         {
+            _webHostEnvironment = webHostEnvironment;
             _context = context;
         }
 
@@ -70,13 +74,56 @@ namespace IntroAspNet.Controllers
         {
             if (ModelState.IsValid)
             {
+                var files = HttpContext.Request.Form.Files;
+                string webRootPath = _webHostEnvironment.WebRootPath;
+                
+                string upload = null, fileName = null, extension = null;
+                upload = webRootPath + ENV.CategoryPreviewPath;
+                fileName = Guid.NewGuid().ToString();
+                
+                if (files.Count > 0)
+                {
+                    extension = Path.GetExtension(files[0].FileName);
+                }
+                
                 if (category.Id == 0)
                 {
+                    if (files.Count > 0)
+                    {
+                        using (FileStream fileStream = new (Path.Combine(upload, fileName + extension), FileMode.Create))
+                        {
+                            files[0].CopyTo(fileStream); 
+                        }
+                    }
+
+                    if (extension != null)
+                    {
+                        category.Preview = fileName + extension;
+                    }
+                    
                     _context.Category.Add(category);
                 }
                 else
                 {
                     var formObject = _context.Category.AsNoTracking().FirstOrDefault(u => u.Id == category.Id);
+                    
+                    if (files.Count > 0)
+                    {
+                        var oldFile = Path.Combine(upload, formObject.Preview);
+
+                        if (System.IO.File.Exists(oldFile))
+                        {
+                            System.IO.File.Delete(oldFile);
+                        }
+
+                        using (FileStream fileStream = new (Path.Combine(upload, fileName + extension), FileMode.Create))
+                        {
+                            files[0].CopyTo(fileStream);
+                        }
+                        
+                        category.Preview = fileName + extension;
+                    }
+                    
                     _context.Category.Update(category);
                 }
                 _context.SaveChanges();

@@ -1,59 +1,56 @@
-﻿@model IEnumerable<IntroAspNet.Models.Product>
+﻿@model IntroAspNet.Models.ViewModels.CatalogVM
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Catalog";
+    
 }
 
-<h1>Index</h1>
+<div class="container mt-3">
+    <div class="row">
+        <div class="col-3">
+            <span class="text-bold">Categories</span>
+            <div class="outline">
+                <ul class="mt-3">
+                    @foreach (var category in @Model.Categories)
+                    {
+                        <li class="mb-1">
+                            <div class="checkbox">
+                                <input type="checkbox" id="@category.Name">
+                                <label class="text-light" for="@category.Name">@category.Name</label>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+        <div class="col-9">
+            <div class="row js-masonry">
+                @foreach (var product in @Model.Products)
+                {
+                    <div class="col-sm-12 col-md-6 col-xl-4 mb-4">
+                        <div class="card card-outline p-4">
+                            <a asp-action="Details" asp-route-id="@product.Id">
+                                <img src="@ENV.ImagePath@product.Preview" style="height: 280px;" alt="@product.Name">
+                            </a>
+                            <div class="card-text pt-3">
+                                <h2>@product.Name</h2>
+                                <p class="mt-3">@product.PreviewText</p>
+                                <div class="d-flex justify-content-between align-items-baseline mt-3">
+                                    <a href="#" class="btn btn-outline p-2">Add to cart</a>
+                                    <span>$@product.Price</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
 
-<p>
-    <a asp-action="Upsert">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Preview)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PreviewText)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Price)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Preview)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PreviewText)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                <a asp-action="Upsert" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+@section Scripts {
+    <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+    <script>
+        
+    </script>
 }
-    </tbody>
-</table>

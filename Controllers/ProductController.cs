@@ -9,7 +9,6 @@ using IntroAspNet.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.IO;
-using System.Collections.Generic;
 
 namespace IntroAspNet.Controllers
 {
@@ -27,8 +26,12 @@ namespace IntroAspNet.Controllers
         // GET: Product
         public IActionResult Index()
         {
-            IEnumerable<Product> productList = _context.Product.Include(u => u.Category);
-            return View(productList);
+            CatalogVM catalogVm = new()
+            {
+                Products = _context.Product.Include(i => i.Category),
+                Categories = _context.Category
+            };
+            return View(catalogVm);
         }
 
         // GET: Product/Details/5
@@ -164,11 +167,6 @@ namespace IntroAspNet.Controllers
             _context.Product.Remove(product);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool ProductExists(int id)
-        {
-            return _context.Product.Any(e => e.Id == id);
         }
     }
 }

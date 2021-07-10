@@ -1,0 +1,13 @@
+﻿@model IntroAspNet.Models.Category
+
+<div class="col-sm-12 col-md-6 col-lg-6 col-xl-4 mb-4">
+    <a href="#">
+        <div class="card card-image" style="height: 250px;">
+            <img src="@ENV.CategoryPreviewPath@Model.Preview" alt="@Model.Name">
+            <div class="card-text">
+                <h2>@Model.Name</h2>
+                <span>21 offers</span>
+            </div>
+        </div>
+    </a>
+</div>
