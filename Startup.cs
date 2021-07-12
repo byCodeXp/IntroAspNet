@@ -6,6 +6,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using IntroAspNet.Models;
 using Microsoft.AspNetCore.Identity;
 
 namespace IntroAspNet
@@ -26,6 +29,13 @@ namespace IntroAspNet
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.AddMvc(setup =>
+            {
+
+            }).AddFluentValidation();
+            
+            services.AddTransient<IValidator<Category>, CategoryValidator>();
             
             services.AddHttpContextAccessor();
             services.AddSession(Options => {
