@@ -1,0 +1,16 @@
+﻿.textBox {
+  display: flex;
+  flex-direction: column;
+  span {
+    align-self: flex-start;
+    background-color: #000000;
+    transform: translateY(50%) translateX(12px);
+  }
+  input {
+    background-color: transparent;
+    border: 1px solid #ffffff;
+    padding: 12px 16px;
+    color: #ffffff;
+  }
+  
+}

@@ -2,12 +2,14 @@
 @import "bootstrap/bootstrap-grid";
 @import "buttons";
 @import "cards";
+@import "inputs";
 
 * {
   margin: 0;
   padding: 0;
   font-family: Roboto, sans-serif;
   text-decoration: none;
+  outline: none;
 }
 
 body, html {
@@ -84,6 +86,6 @@ ul {
   }
   input[type=checkbox]:checked+label::before {
     border: 0;
-    background-image: url(https://lh3.googleusercontent.com/proxy/lGOj0SRvVkn1MjTGuzsD70VkTlsNuY1CpXTc_JeUFFAoOdhKr0yCtxYv3ngXkC1QgNpBDKkt5M7xB9GVU7V9MDI8IEI801fP28RSRh-S8gwRx3zb8Kf-ph9h);
+    background-image: url(/resources/cross.svg);
   }
 }

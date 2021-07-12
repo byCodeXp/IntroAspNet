@@ -3,21 +3,43 @@
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
 
-<ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))
 {
-    <li class="nav-item">
-        <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
-    </li>
-    <li class="nav-item">
-        <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-            <button id="logout" type="submit" class="nav-link btn btn-link text-dark">Logout</button>
-        </form>
-    </li>
+    <div class="d-flex align-items-center" >
+        <a href="#" class="me-4">
+            <i class="fas fa-shopping-cart"></i>
+            <span>12</span>
+        </a>
+        <span id="barMenu" style="position: relative; cursor: pointer;">@UserManager.GetUserName(User)
+            <style>
+                .hidden {
+                    display: none;
+                    visibility: hidden;
+                }
+            </style>
+            <ul id="dropMenu" class="p-3" style="position: absolute; width: 180px; box-sizing: border-box; border: 1px solid #ffffff; margin-top: 24px; left: 50%; transform: translateX(-50%);">
+                <li class="mb-2">
+                    <a href="#">Profile</a>
+                </li>
+                <li class="mb-3">
+                    <a href="#">Settings</a>
+                </li>
+                <hr style="border: 0; border-bottom: 1px solid #ffffff;" class="mb-3">
+                <li>
+                    <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new {area = ""})">
+                        <button id="logout" type="submit" class="btn py-2 px-3">Logout</button>
+                    </form>
+                </li>
+            </ul>
+        </span>
+    </div>
 }
 else
 {
-    <a class="btn" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
-    <a class="btn" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
+    <div>
+        <a class="btn" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
+        <a class="btn" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
+    </div>
 }
-</ul>
+
+

@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>@ViewData["Title"] - StudioFilm</title>
-        <link rel="stylesheet" href="~/css/app.css"/>
+    <link rel="stylesheet" href="~/css/app.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
 </head>
 <body class="theme-dark">
 <div id="wrapper">
@@ -15,15 +16,17 @@
                 <nav class="d-flex justify-content-between">
                     <a class="py-3 text-bold" href="#">StudioFilm</a>
                     <ul class="py-3 d-flex">
-                        <li><a class="nav-link active" asp-controller="Home" asp-action="Index">Home</a></li>
-                        <li><a class="nav-link" asp-controller="Product" asp-action="Index">Catalog</a></li>
-                        <li><a class="nav-link" asp-controller="Category" asp-action="Index">Categories</a></li>
+                        <li>
+                            <a class="nav-link @(ViewData["Title"].ToString() == "Home" ? "active" : "")" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li>
+                            <a class="nav-link @(ViewData["Title"].ToString() == "Catalog" ? "active" : "")" asp-controller="Product" asp-action="Index">Catalog</a>
+                        </li>
+                        <li>
+                            <a class="nav-link @(ViewData["Title"].ToString() == "Categories" ? "active" : "")" asp-controller="Category" asp-action="Index">Categories</a>
+                        </li>
                     </ul>
-                    <div>
-                        @* <a class="btn" href="#">Login</a> *@
-                        @* <a class="btn" href="#">Sign-Up</a> *@
-                        <partial name="_LoginPartial" />
-                    </div>
+                    <partial name="_LoginPartial"/>
                 </nav>
             </div>
         </header>
@@ -32,9 +35,21 @@
         </main>
     </div>
 </div>
-@* <script src="~/lib/jquery/dist/jquery.min.js"></script> *@
-@* <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script> *@
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>
+<script type="text/javascript">
+    $('#dropMenu').addClass('hidden');
+    $(window).click(function () {
+        if (event.target === $("#barMenu")[0]) {
+            $("#dropMenu").toggleClass('hidden'); 
+        }
+        else if (event.target !== $("#dropMenu")[0]) {
+            $("#dropMenu").addClass('hidden');
+        }
+    });
+</script>
 @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
