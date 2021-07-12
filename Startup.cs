@@ -36,6 +36,7 @@ namespace IntroAspNet
             }).AddFluentValidation();
             
             services.AddTransient<IValidator<Category>, CategoryValidator>();
+            services.AddTransient<IValidator<Product>, ProductValidator>();
             
             services.AddHttpContextAccessor();
             services.AddSession(Options => {
