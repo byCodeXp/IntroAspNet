@@ -11,20 +11,14 @@
             <span>12</span>
         </a>
         <span id="barMenu" style="position: relative; cursor: pointer;">@UserManager.GetUserName(User)
-            <style>
-                .hidden {
-                    display: none;
-                    visibility: hidden;
-                }
-            </style>
-            <ul id="dropMenu" class="p-3" style="position: absolute; width: 180px; box-sizing: border-box; border: 1px solid #ffffff; margin-top: 24px; left: 50%; transform: translateX(-50%);">
+            <ul id="dropMenu" class="p-3" style="position: absolute; z-index: 2; background-color: rgba(0,0,0,0.9); width: 180px; box-sizing: border-box; border: 1px solid #ffffff; margin-top: 24px; left: 50%; transform: translateX(-50%);">
                 <li class="mb-2">
                     <a href="#">Profile</a>
                 </li>
                 <li class="mb-3">
                     <a href="#">Settings</a>
                 </li>
-                <hr style="border: 0; border-bottom: 1px solid #ffffff;" class="mb-3">
+                <hr style="border: none; border-bottom: 1px solid #ffffff;" class="mb-3">
                 <li>
                     <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new {area = ""})">
                         <button id="logout" type="submit" class="btn py-2 px-3">Logout</button>
