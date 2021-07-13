@@ -8,19 +8,17 @@
     <div class="row">
         <div class="col-3">
             <span class="text-bold">Categories</span>
-            <div class="outline">
-                <ul class="mt-3">
-                    @foreach (var category in @Model.Categories)
-                    {
-                        <li class="mb-1">
-                            <div class="checkbox">
-                                <input type="checkbox" id="@category.Name">
-                                <label class="text-light" for="@category.Name">@category.Name</label>
-                            </div>
-                        </li>
-                    }
-                </ul>
-            </div>
+            <ul class="mt-3 d-flex flex-column">
+                @foreach (var category in @Model.Categories)
+                {
+                    <li class="mb-1">
+                        <div class="checkbox checkbox-large">
+                            <input type="checkbox" id="@category.Name">
+                            <label class="text-light" for="@category.Name">@category.Name</label>
+                        </div>
+                    </li>
+                }
+            </ul>
         </div>
         <div class="col-9">
             <div class="row js-masonry">

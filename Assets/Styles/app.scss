@@ -58,34 +58,3 @@ ul {
 .outline {
   box-shadow: inset 0 0 2px 0 #232323;
 }
-
-.checkbox {
-  input[type=checkbox] {
-    position: absolute;
-    z-index: -1;
-    opacity: 0;
-  }
-  input[type=checkbox]+label {
-    display: inline-flex;
-    align-items: center;
-    user-select: none;
-  }
-  input[type=checkbox]+label::before {
-    content: '';
-    display: inline-block;
-    width: 32px;
-    height: 32px;
-    flex-shrink: 0;
-    flex-grow: 0;
-    margin-right: 16px;
-    box-shadow: inset 0 0 2px #ffffff;
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-size: 50% 50%;
-    box-sizing: border-box;
-  }
-  input[type=checkbox]:checked+label::before {
-    border: 0;
-    background-image: url(/resources/cross.svg);
-  }
-}
