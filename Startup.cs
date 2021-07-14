@@ -9,12 +9,15 @@ using System;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using IntroAspNet.Models;
+using IntroAspNet.Services;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace IntroAspNet
 {
     public class Startup
     {
+        private string _connection = null;
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -22,12 +25,14 @@ namespace IntroAspNet
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
+            _connection = Configuration["ConnectionStrings:Default"];
+            
+            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(_connection));
+            
             services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddMvc(setup =>
@@ -39,14 +44,13 @@ namespace IntroAspNet
             services.AddTransient<IValidator<Product>, ProductValidator>();
             
             services.AddHttpContextAccessor();
-            services.AddSession(Options => {
-                Options.IdleTimeout = TimeSpan.FromDays(1);
-                Options.Cookie.HttpOnly = true;
-                Options.Cookie.IsEssential = true;
+            services.AddSession(options => {
+                options.IdleTimeout = TimeSpan.FromDays(1);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
             });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -71,9 +75,7 @@ namespace IntroAspNet
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }
