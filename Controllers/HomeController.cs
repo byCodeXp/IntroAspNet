@@ -20,17 +20,12 @@ namespace IntroAspNet.Controllers
 
         public IActionResult Index()
         {
-            HomeVM homeVM = new HomeVM()
+            HomeVM homeVm = new HomeVM()
             {
                 Products = _db.Product.Include(u => u.Category),
-                Categories = _db.Category
+                Categories = _db.Category.Include(p => p.Products),
             };
-            return View(homeVM);
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
+            return View(homeVm);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

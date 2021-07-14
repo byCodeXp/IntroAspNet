@@ -29,7 +29,19 @@ namespace IntroAspNet.Controllers
             CatalogVM catalogVm = new()
             {
                 Products = _context.Product.Include(i => i.Category),
-                Categories = _context.Category
+                Categories = _context.Category,
+            };
+            return View(catalogVm);
+        }
+        
+        // GET: Product
+        [Route("/Product/{categoryId:int}")]
+        public IActionResult Index(int categoryId)
+        {
+            CatalogVM catalogVm = new()
+            {
+                Products = _context.Product.Include(i => i.Category),
+                Categories = _context.Category,
             };
             return View(catalogVm);
         }
