@@ -1,11 +1,11 @@
-﻿@model IntroAspNet.Models.Product
+﻿@model IntroAspNet.Models.ViewModels.DetailProductVM
 
 @{
     ViewData["Title"] = "Details";
 }
 
 <div class="d-flex justify-content-center align-items-center" style="position: fixed; left: 0; top: 0; width: 100%; height: 100%; z-index: -1;">
-    <img src="@ENV.ImagePath@Model.Preview" alt="@Model.Name" style="max-height: 50%;">
+    <img src="@ENV.Path.ProductPreview@Model.Product.Preview" alt="@Model.Product.Name" style="max-height: 50%;">
 </div>
 
 <div style="position: fixed; left: 0; top: 50%; transform: translateY(-50%); width: 100%;">
@@ -19,10 +19,20 @@
 
 <div style="position: fixed; bottom: 0; left: 0; width: 100%; background-color: #0a0a0a;">
     <div class="container d-flex justify-content-between align-items-center p-3">
-        <h1>@Model.Name</h1>
-        <div>
-            <span class="me-3">$ @Model.Price</span>
-            <a href="#" class="btn p-2">Add to cart</a>
+        <h1>@Model.Product.Name</h1>
+        <div class="d-flex align-items-center">
+            <span class="me-3">$ @Model.Product.Price</span>
+            <form method="post">
+                <input asp-for="@Model.Product.Id" hidden/>
+                @if (@Model.InCart)
+                {
+                    <a class="btn p-2" asp-action="RemoveFromCart" asp-route-id="@Model.Product.Id">Remove</a>
+                }
+                else
+                {
+                    <button asp-route-id="@Model.Product.Id" class="btn btn-outline p-2">Add to cart</button>
+                }
+            </form>
         </div>
     </div>
 </div>

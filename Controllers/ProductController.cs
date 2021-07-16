@@ -8,7 +8,9 @@ using Microsoft.AspNetCore.Hosting;
 using IntroAspNet.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using IntroAspNet.Services;
 
 namespace IntroAspNet.Controllers
 {
@@ -33,27 +35,17 @@ namespace IntroAspNet.Controllers
             };
             return View(catalogVm);
         }
-        
-        // GET: Product
-        [Route("/Product/{categoryId:int}")]
-        public IActionResult Index(int categoryId)
-        {
-            CatalogVM catalogVm = new()
-            {
-                Products = _context.Product.Include(i => i.Category),
-                Categories = _context.Category,
-            };
-            return View(catalogVm);
-        }
 
         // GET: Product/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            var carts = HttpContext.Session.Get<IEnumerable<Cart>>("carts");
+
             if (id == null)
             {
                 return NotFound();
             }
-
+            
             var product = await _context.Product
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (product == null)
@@ -61,11 +53,66 @@ namespace IntroAspNet.Controllers
                 return NotFound();
             }
 
-            return View(product);
+            bool inCart = false;
+            
+            if (carts != null)
+            {
+                inCart = carts.Any(e => e.ProductId == id);
+            }
+            
+            DetailProductVM detailProductVm = new()
+            {
+                Product = product,
+                InCart = inCart
+            };
+
+            return View(detailProductVm);
         }
 
-        // GET: Product/Upsert
+        [HttpPost, ActionName("Details")]
+        public IActionResult AddToCart(int id)
+        {
+            List<Cart> shoppingCartList = new();
 
+            var context = HttpContext.Session.Get<IEnumerable<Cart>>("carts");
+            if (context != null && context.Any())
+            {
+                shoppingCartList = context.ToList();
+            }
+
+            if (_context.Product.Any(e => e.Id == id))
+            {
+                shoppingCartList.Add(new Cart { ProductId = id });
+                HttpContext.Session.Set("carts", shoppingCartList);
+            }
+            
+            return RedirectToAction(nameof(Details));
+        }
+        
+        public IActionResult RemoveFromCart(int id)
+        {
+            List<Cart> shoppingCartList = new List<Cart>();
+
+            var carts = HttpContext.Session.Get<IEnumerable<Cart>>("carts");
+            
+            if (carts != null && carts.Any())
+            {
+                shoppingCartList = carts.ToList();
+            }
+
+            var removeItem = shoppingCartList.SingleOrDefault(u => u.ProductId == id);
+            if (removeItem != null)
+            {
+                shoppingCartList.Remove(removeItem);
+            }
+
+            HttpContext.Session.Set("carts", shoppingCartList);
+
+            return Redirect("/Product/Details/" + id);
+        }
+        
+        // GET: Product/Upsert
+        
         public IActionResult Upsert(int? id)
         {
             ProductVM productVM = new ProductVM()
@@ -103,10 +150,9 @@ namespace IntroAspNet.Controllers
                 var files = HttpContext.Request.Form.Files;
                 string webRootPath = _webHostEnvironment.WebRootPath;
 
-                string upload = webRootPath + ENV.ImagePath;
+                string upload = webRootPath + ENV.Path.ProductPreview;
                 string fileName = Guid.NewGuid().ToString();
                 string extentions = Path.GetExtension(files[0].FileName);
-
 
                 if (productVM.Product.Id == 0)
                 {

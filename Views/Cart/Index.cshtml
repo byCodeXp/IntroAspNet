@@ -1,0 +1,37 @@
+﻿@model IEnumerable<Product>
+
+@{
+    ViewData["Title"] = "Cart";
+}
+
+<div class="container mt-3">
+    <h1>Cart</h1>
+    <div class="row mt-5 py-2" style="border-bottom: 1px solid #ffffff; border-top: 1px solid #ffffff;">
+        <div class="col">Product</div>
+        <div class="col-2 d-flex justify-content-center">Price</div>
+        <div class="col-2 d-flex justify-content-center">Quantity</div>
+        <div class="col-2"></div>
+    </div>
+    @foreach (var item in Model)
+    {
+        <div class="row mt-3">
+            <div class="col d-flex align-items-center">
+                <img class="rounded w-128 h-128" style="min-width: 128px; background-color: #0c0c0c; object-fit: contain;" src="@ENV.Path.ProductPreview@item.Preview" alt="@item.Name">
+                <div class="ms-3" style="max-height: 128px; overflow: hidden;">
+                    <h2>@item.Name</h2>
+                    <p class="mt-2">@item.PreviewText</p>
+                </div>
+            </div>
+            <div class="col-2 d-flex align-items-center justify-content-center">
+                $@item.Price
+            </div>
+            <div class="col-2 d-flex align-items-center justify-content-center">
+                <input type="text" value="1">
+            </div>
+            <div class="col-2 d-flex justify-content-end align-items-center">
+                <a class="btn p-2 me-3">Edit</a>
+                <a class="btn p-2">Remove</a>
+            </div>
+        </div>
+    }
+</div>

@@ -3,6 +3,7 @@
 @import "buttons";
 @import "cards";
 @import "inputs";
+@import "sizes";
 
 * {
   margin: 0;
@@ -62,4 +63,8 @@ ul {
 .hidden {
   display: none;
   visibility: hidden;
+}
+
+.rounded {
+  border-radius: 4px;
 }

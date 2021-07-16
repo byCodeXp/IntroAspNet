@@ -78,7 +78,7 @@ namespace IntroAspNet.Controllers
                 string webRootPath = _webHostEnvironment.WebRootPath;
                 
                 string upload = null, fileName = null, extension = null;
-                upload = webRootPath + ENV.CategoryPreviewPath;
+                upload = webRootPath + ENV.Path.CategoryPreview;
                 fileName = Guid.NewGuid().ToString();
                 
                 if (files.Count > 0)

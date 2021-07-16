@@ -9,9 +9,7 @@ using System;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using IntroAspNet.Models;
-using IntroAspNet.Services;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace IntroAspNet
 {
@@ -32,13 +30,24 @@ namespace IntroAspNet
             _connection = Configuration["ConnectionStrings:Default"];
             
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(_connection));
-            
-            services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddDefaultTokenProviders()
+                .AddDefaultUI()
+                .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddMvc(setup =>
             {
 
             }).AddFluentValidation();
+
+            services.AddHttpContextAccessor();
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromDays(1);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
             
             services.AddTransient<IValidator<Category>, CategoryValidator>();
             services.AddTransient<IValidator<Product>, ProductValidator>();
@@ -65,13 +74,10 @@ namespace IntroAspNet
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
             app.UseRouting();
-
+            app.UseSession();
             app.UseAuthentication();
-            
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
